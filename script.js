@@ -34,7 +34,7 @@ function sendSystemNotification(name, qty) {
         }
     }
 
-    // Trigger In-App Toast Notification
+    // Trigger In-App Toast Notification (mainly for mobile)
     showToast(msg);
 }
 
@@ -157,18 +157,22 @@ window.enableManualEdit = (element, id) => {
         if (!isNaN(newValue)) {
             const item = inventory.find(p => p.id === id);
             if (item) {
+                // Check if it's hitting 0 first
                 if (newValue <= 0) {
                     inventory = inventory.filter(p => p.id !== id);
                     sendSystemNotification(item.name, 0);
-                } else {
+                } 
+                // Only alert if the value actually CHANGED to a low state
+                else if (newValue <= item.min && item.qty > item.min) {
                     item.qty = newValue;
-                    if (newValue <= item.min) {
-                        sendSystemNotification(item.name, newValue);
-                    }
+                    sendSystemNotification(item.name, newValue);
+                } 
+                else {
+                    item.qty = newValue;
                 }
             }
         }
-        renderInventory(searchInput.value)
+        renderInventory(searchInput.value);
     };
 
     input.onblur = saveManualValue;
