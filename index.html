@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InventoryPro | Digital Vault</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-content">
+        <header>
+            <h1>Inventory<span>Pro</span></h1>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Valuation</h4>
+                    <div id="total-val">₹0.00</div>
+                </div>
+                <div class="stat-card" id="alert-card" onclick="toggleLowStockFilter()" style="cursor: pointer;">
+                    <h4>Low Stock Alerts</h4>
+                    <div id="alert-count" style="color: #ef4444; font-weight: bold;">0</div>
+                    <small style="font-size: 0.6rem; opacity: 0.6;">Click to filter</small>
+                </div>
+            </div>
+        </header>
+
+        <div class="clay-panel import-zone">
+            <h4 style="text-transform: uppercase; font-size: 0.7rem; margin-bottom: 15px;">Bulk Data Import</h4>
+            <label class="clay-upload-label" style="cursor: pointer;">
+                <span style="border-bottom: 1px dashed var(--charcoal); padding-bottom: 5px;">📁 Click to Upload CSV</span>
+                <input type="file" id="csv-file" accept=".csv" hidden>
+            </label>
+            <div class="format-guide">
+                <strong>Format:</strong><br> <p>Name, Price, Qty, AlertLevel</p>
+            </div>
+        </div>
+
+        <div class="clay-panel">
+            <h4 style="text-transform: uppercase; font-size: 0.7rem; margin-bottom: 25px;">Asset Registration</h4>
+            <form id="product-form" autocomplete="off">
+                <input type="text" id="p-name" placeholder="Item Name" required>
+                <div style="display: flex; gap: 20px;">
+                    <input type="number" id="p-price" placeholder="Price (₹)" step="1" required>
+                    <input type="number" id="p-qty" placeholder="Current Stock" required>
+                </div>
+                <input type="number" id="p-min" placeholder="Alert Level (Threshold)" required>
+                <button type="submit">Add to Vault</button>
+            </form>
+        </div>
+        
+        <div class="clay-panel search-box">
+            <h4 style="text-transform: uppercase; font-size: 0.7rem;">Inventory Filter</h4>
+            <input type="text" id="search" placeholder="Enter product name...">
+            <button onclick="resetInventory()" class="reset-btn">Purge All Data</button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Details</th>
+                    <th>Unit Price</th>
+                    <th>Stock Control</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-body"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
