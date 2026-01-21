@@ -18,12 +18,51 @@ if (window.Notification && Notification.permission !== "granted") {
 }
 
 function sendSystemNotification(name, qty) {
-    if (Notification.permission === "granted") {
-        new Notification("Stock Alert", {
-            body: qty === 0 ? `${name} has been removed (Out of Stock).` : `${name} is low! Only ${qty} left.`,
-            icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png"
-        });
+    const msg = qty === 0 
+        ? `${name} has been removed (Out of Stock).` 
+        : `${name} is running low! Only ${qty} left.`;
+
+    // Desktop System Notification 
+    if (window.Notification && Notification.permission === "granted") {
+        try {
+            new Notification("Stock Alert", {
+                body: msg,
+                icon: "https://cdn-icons-png.flaticon.com/512/565/565547.png"
+            });
+        } catch (err) {
+            console.log("System notification blocked by mobile OS, using Toast instead.");
+        }
     }
+
+    // Trigger In-App Toast Notification
+    showToast(msg);
+}
+
+/**
+ * Creates a visual popup at the top of the screen
+ */
+function showToast(msg) {
+    let container = document.getElementById('toast-container');
+    
+    // Create container if it doesn't exist
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<strong>⚠️ Alert:</strong> ${msg}`;
+    
+    container.appendChild(toast);
+
+    // Remove toast after 4 seconds with a fade-out effect
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 }
 
 // --- 4. CORE RENDER ENGINE ---
